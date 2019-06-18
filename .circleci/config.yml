@@ -15,7 +15,7 @@ jobs:
       - run:
           name: Build TVM
           command: |
-            nix-build > build-outputs.txt
+            nix-build --cores 2 > build-outputs.txt
 
       - run:
           name: Dump binary cache

@@ -8,11 +8,25 @@ jobs:
       - checkout
 
       - run:
-          name: Install Essential tools
+          name: Install tools
           command: |
-            nix-env -iA nixpkgs.xz
+            nix-env -f ./nixpkgs.nix -iA xz gzip gnutar
 
       - run:
           name: Build TVM
           command: |
-            nix-build
+            nix-build > build-outputs.txt
+
+      - run:
+          name: Dump binary cache
+          command: |
+            nix copy -v --to file:///tmp/binary-cache $(cat build-outputs.txt)
+            tar cJvf /tmp/binary-cache.tar.xz /tmp/binary-cache
+
+      - store_artifacts:
+          path: /tmp/binary-cache.tar.xz
+          destination: binary-cache.tar.xz
+
+      - store_artifacts:
+          path: /tmp/binary-cache
+          destination: binary-cache

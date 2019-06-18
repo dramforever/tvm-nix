@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: nixorg/nix:circleci
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install Essential tools
+          command: |
+            nix-env -iA nixpkgs.xz
+
+      - run:
+          name: Build TVM
+          command: |
+            nix-build
